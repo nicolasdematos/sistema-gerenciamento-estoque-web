@@ -7,9 +7,11 @@ package com.example.PI3_Gerenciador_estoque.controller;
 import com.example.PI3_Gerenciador_estoque.model.Produto;
 import com.example.PI3_Gerenciador_estoque.repository.ProdutoRepository;
 import com.example.PI3_Gerenciador_estoque.service.ProdutoService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +34,12 @@ public class ProdutoControllerAPI {
         produto.setId(null);
         produtoRepository.save(produto);
         return new ResponseEntity<>(produto, HttpStatus.CREATED);
+    }
+    
+    @GetMapping("/exibir-todos")
+    public ResponseEntity<List> listar(){
+        List<Produto> filmeS = produtoRepository.findAll();
+        return new ResponseEntity<>(filmeS, HttpStatus.OK);
     }
     
 }

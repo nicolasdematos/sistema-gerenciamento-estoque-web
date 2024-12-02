@@ -10,6 +10,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/style.css">
         <script src="/script.js" defer></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
         
@@ -39,28 +40,53 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <button type="submit">Cadastrar</button>
         </form>
     </div>
-
+    
+        
     <script>
-        function validarCadastroProduto() {
-            const nome = document.getElementById("nome").value;
-            const codigo = document.getElementById("codigo").value;
-            const categoria = document.getElementById("categoria").value;
-            const quantidade = document.getElementById("quantidade").value;
-            const localizacao = document.getElementById("localizacao").value;
+        $(document).ready(function() {
+            $("#formCadastrarProduto").on("submit", function(event) {
+                event.preventDefault();
 
-            if (!nome || !codigo || !categoria || !quantidade || !localizacao) {
-                alert("Todos os campos são obrigatórios!");
-                return false;
-            }
+                const nome = $("#nome").val();
+                const codigo = $("#codigo").val();
+                const categoria = $("#categoria").val();
+                const quantidade = $("#quantidade").val();
+                const localizacao = $("#localizacao").val();
 
-            if (quantidade <= 0) {
-                alert("A quantidade deve ser maior que zero.");
-                return false;
-            }
+                if (!nome || !codigo || !categoria || !quantidade || !localizacao) {
+                    alert("Todos os campos são obrigatórios!");
+                    return;
+                }
 
-            alert("Produto cadastrado com sucesso!");
-            return true;
-        }
+                if (quantidade <= 0) {
+                    alert("A quantidade deve ser maior que zero.");
+                    return;
+                }
+
+                const produto = {
+                    nome: nome,
+                    codigo: codigo,
+                    categoria: categoria,
+                    quantidade: parseInt(quantidade),
+                    localizacao: localizacao
+                };
+
+                $.ajax({
+                    url: "http://localhost:8080/adicionar-produto",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(produto),
+                    success: function(response) {
+                        alert("Produto cadastrado com sucesso!");
+                        $("#formCadastrarProduto")[0].reset();
+                    },
+                    error: function(xhr) {
+                        const errorMessage = xhr.responseJSON?.message || "Erro ao cadastrar o produto.";
+                        alert(errorMessage);
+                    }
+                });
+            });
+        });
     </script>
         
         
