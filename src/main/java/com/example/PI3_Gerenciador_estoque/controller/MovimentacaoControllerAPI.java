@@ -8,9 +8,11 @@ import com.example.PI3_Gerenciador_estoque.model.Movimentacao;
 import com.example.PI3_Gerenciador_estoque.model.Produto;
 import com.example.PI3_Gerenciador_estoque.repository.MovimentacaoRepository;
 import com.example.PI3_Gerenciador_estoque.repository.ProdutoRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,5 +52,13 @@ public class MovimentacaoControllerAPI {
         else{
             return new ResponseEntity<>( HttpStatus.NOT_ACCEPTABLE);
         }
+    }
+    
+    
+    
+    @GetMapping("/exibir-movimentacoes")
+    public ResponseEntity<List> listar(){
+        List<Movimentacao> filmeS = movimentacaoRepository.findAll();
+        return new ResponseEntity<>(filmeS, HttpStatus.OK);
     }
 }
