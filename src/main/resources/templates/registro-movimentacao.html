@@ -9,6 +9,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <meta charset="UTF-8">
         <link rel="stylesheet" href="/style.css">
         <script src="/script.js" defer></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
@@ -28,6 +29,45 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <button type="submit">Registrar</button>
         </form>
     </div>
+    
+        
+        <script>
+        $(document).ready(function() {
+            $("#formRegistroMovimentacao").on("submit", function(event) {
+                event.preventDefault(); // Evita o comportamento padrão de redirecionamento
+
+                const produtoId = $("#productId").val();
+                const tipo = $("#tipo").val();
+                const quantidade = $("#quantidade").val();
+
+                if (!produtoId || !tipo || !quantidade || quantidade <= 0) {
+                    alert("Preencha todos os campos corretamente. A quantidade deve ser maior que zero.");
+                    return;
+                }
+
+                const movimentacao = {
+                    produto_id: parseInt(produtoId),
+                    tipo: tipo,
+                    quantidade: parseInt(quantidade)
+                };
+
+                $.ajax({
+                    url: "http://localhost:8080/adicionar-movimentacao",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(movimentacao),
+                    success: function(response) {
+                        alert("Movimentação registrada com sucesso!");
+                        $("#formRegistroMovimentacao")[0].reset(); // Limpa o formulário
+                    },
+                    error: function(xhr) {
+                        const errorMessage = xhr.responseJSON?.message || "Erro ao registrar movimentação.";
+                        alert(errorMessage);
+                    }
+                });
+            });
+        });
+    </script>
         
     </body>
 </html>
