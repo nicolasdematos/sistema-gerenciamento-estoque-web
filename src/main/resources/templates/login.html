@@ -22,5 +22,38 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         </form>
         <a th:href="@{/menu}" class="back-button">Menu</a>
     </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('form').submit(function (event) {
+            event.preventDefault(); // Evita o reload da página
+            
+            const username = $('#username').val();
+            const password = $('#password').val();
+
+            // Envia os dados ao backend
+            $.ajax({
+                url: '/api/login',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ username, password }),
+                success: function (response) {
+                    alert(`Bem-vindo, ${response.userType}!`);
+                    
+                    // Salva o tipo de usuário em um cookie
+                    document.cookie = `userType=${response.userType}; path=/;`;
+                    
+                    // Redireciona para o menu
+                    window.location.href = '/menu';
+                },
+                error: function () {
+                    alert('Usuário ou senha inválidos!');
+                }
+            });
+        });
+    });
+</script>
+    
 </body>
 </html>
