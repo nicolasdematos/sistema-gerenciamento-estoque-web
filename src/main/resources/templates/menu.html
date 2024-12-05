@@ -4,20 +4,64 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Menu</title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="/style.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div></div>
-        <div class="container">
+<head>
+    <title>Menu</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Estilo para botões desabilitados */
+        button:disabled {
+            background-color: #cccccc; /* Cinza claro */
+            color: #666666;           /* Texto mais escuro */
+            cursor: not-allowed;      /* Ícone de "proibido" */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
         <h1>Menu Principal</h1>
-        <button onclick="window.location.href='/registro-movimentacao'">Registro de Movimentação</button>
-        <button onclick="window.location.href='/listar-movimentacao'">Lista de Movimentação</button>
-        <button onclick="window.location.href='/cadastro-produtos'">Cadastrar Produtos</button>
-        <button onclick="window.location.href='/'">Logout</button>
+        <button id="registro-movimentacao" onclick="window.location.href='/registro-movimentacao'">Registro de Movimentação</button>
+        <button id="listar-movimentacao" onclick="window.location.href='/listar-movimentacao'">Lista de Movimentação</button>
+        <button id="cadastro-produtos" onclick="window.location.href='/cadastro-produtos'">Cadastrar Produtos</button>
+        <button id="logout">Logout</button>
     </div>
-    </body>
+
+    <script>
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+            return null;
+        }
+
+        function clearCookie(name) {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userType = getCookie('userType');
+
+            if (userType === 'usuario') {
+                document.getElementById('registro-movimentacao').disabled = true;
+                document.getElementById('cadastro-produtos').disabled = true;
+            } else if (userType === 'funcionario') {
+                document.getElementById('cadastro-produtos').disabled = true;
+            } else if (userType === 'gerente') {
+            } else {
+                alert('Usuário não autenticado!');
+                window.location.href = '/';
+            }
+
+            document.getElementById('logout').addEventListener('click', () => {
+                clearCookie('userType');
+                window.location.href = '/';
+            });
+        });
+    </script>
+</body>
 </html>
