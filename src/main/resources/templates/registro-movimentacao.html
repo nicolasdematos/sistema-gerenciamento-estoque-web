@@ -38,7 +38,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <script>
         $(document).ready(function() {
             $("#formRegistroMovimentacao").on("submit", function(event) {
-                event.preventDefault(); // Evita o comportamento padrão de redirecionamento
+                event.preventDefault();
 
                 const produtoId = $("#productId").val();
                 const tipo = $("#tipo").val();
@@ -62,10 +62,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     data: JSON.stringify(movimentacao),
                     success: function(response) {
                         alert("Movimentação registrada com sucesso!");
-                        $("#formRegistroMovimentacao")[0].reset(); // Limpa o formulário
+                        $("#formRegistroMovimentacao")[0].reset();
                     },
                     error: function(xhr) {
-                        const errorMessage = xhr.responseJSON?.message || "Erro ao registrar movimentação.";
+                        const errorMessage = xhr.responseJSON?.message || "Erro ao registrar movimentação. Id de produto não existe";
                         alert(errorMessage);
                     }
                 });

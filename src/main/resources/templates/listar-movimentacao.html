@@ -5,7 +5,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Lista de Movimentação</title>
+    <title>Lista de Movimentação e Produtos</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
@@ -13,29 +13,33 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 </head>
 <body>
     <div class="container">
-        <h1>Lista de Movimentações</h1>
+        <h1>Visualizar estoque</h1>
         <button onclick="listarMovimentacoes()">Listar Movimentações</button>
+        <button onclick="listarProdutos()">Listar Produtos</button>
         <button onclick="window.location.href='/menu'">Voltar ao menu</button>
         <div id="movimentacoesContainer"></div>
+        <div id="produtosContainer"></div>
     </div>
 
     <script>
         function listarMovimentacoes() {
+            
+            $("#movimentacoesContainer").show();
+            $("#produtosContainer").hide();
+            
             $.ajax({
                 url: "http://localhost:8080/exibir-movimentacoes",
                 type: "GET",
                 success: function(data) {
-                    // Transformar os dados retornados no formato necessário
                     const movimentacoes = data.map(mov => ({
                         id: mov.id,
-                        tipo: mov.tipo.charAt(0).toUpperCase() + mov.tipo.slice(1), // Capitalizar o tipo
-                        produto: `Produto ${mov.produto_id}`, // Ajustar o nome do produto (personalize conforme necessário)
+                        tipo: mov.tipo.charAt(0).toUpperCase() + mov.tipo.slice(1),
+                        produto: `Produto ${mov.produto_id}`,
                         quantidade: mov.quantidade
                     }));
 
-                    // Renderizar as movimentações na página
                     const container = document.getElementById('movimentacoesContainer');
-                    container.innerHTML = "<h2>Movimentações Recentes</h2>";
+                    container.innerHTML = "<h2>Lista de movimentações</h2>";
 
                     movimentacoes.forEach(mov => {
                         const div = document.createElement('div');
@@ -48,6 +52,42 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 },
                 error: function(xhr) {
                     alert("Erro ao buscar as movimentações.");
+                }
+            });
+        }
+
+        function listarProdutos() {
+            
+            $("#movimentacoesContainer").hide();
+            $("#produtosContainer").show();
+            
+            $.ajax({
+                url: "http://localhost:8080/exibir-todos",
+                type: "GET",
+                success: function(data) {
+                    const produtos = data.map(prod => ({
+                        id: prod.id,
+                        nome: prod.nome,
+                        codigo: prod.codigo,
+                        categoria: prod.categoria,
+                        quantidade: prod.quantidade,
+                        localizacao: prod.localizacao
+                    }));
+
+                    const container = document.getElementById('produtosContainer');
+                    container.innerHTML = "<h2>Lista de Produtos</h2>";
+
+                    produtos.forEach(prod => {
+                        const div = document.createElement('div');
+                        div.classList.add('produto');
+                        div.innerHTML = `
+                            <p>ID: ${prod.id} - Nome: ${prod.nome} - Código: ${prod.codigo} - Categoria: ${prod.categoria} - Quantidade: ${prod.quantidade} - Localização: ${prod.localizacao}</p>
+                        `;
+                        container.appendChild(div);
+                    });
+                },
+                error: function(xhr) {
+                    alert("Erro ao buscar os produtos.");
                 }
             });
         }
